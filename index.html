@@ -1,0 +1,71 @@
+<!doctype html>
+<head>
+  <meta charset="utf-8">
+  <title>Is B&H Open?</title>
+
+  <script type="text/javascript">
+    var OPEN = true;
+    var MESSAGE = '';
+    var HOLIDAY = false;
+
+    d = new Date();
+    localTime = d.getTime();
+    localOffset = d.getTimezoneOffset() * 60000;
+    utc = localTime + localOffset;
+    offset = -5;   
+    newYork = utc + (3600000*offset);
+    now = new Date(newYork);
+    year = now.getYear();
+    month = now.getMonth();
+    day = now.getDay();
+    hour = now.getHours();
+
+    HOLIDAYS = [
+      ['Christmas', new Date('25 Dec, 2011')],
+      ['Purim', new Date('8 March, 2012')],
+      ['Passover Eve', new Date('6 April, 2012')]
+    ]
+
+    for (var i = 0; i < HOLIDAYS.length; i++) {
+      h = HOLIDAYS[i][1]
+      if (h.getYear() == year && h.getMonth() == month && h.getDay() == day) {
+        HOLIDAY = true;
+        OPEN = false;
+      }
+    }
+
+    if (!(HOLIDAY)) {
+      if (day == 6) {
+        // closed saturdays
+        OPEN = false;
+      } else if (day == 5) {
+        // Friday
+        if (!(hour >= 9 && hour <= 12)){
+          OPEN = false;
+        }
+      } else if (day == 0) {
+        // Sundays
+        if (!(hour >= 10 && hour <= 17)){
+          OPEN = false;
+        }
+      } else {
+        // Monday -> Thursday
+        if (!(hour >= 9 && hour <= 18)){
+          OPEN = false;
+        }
+      }
+    }
+    
+    
+    document.writeln(OPEN ? 'Yes' : 'No')
+  </script>
+  <style type="text/css">
+    body {
+      font-size: 100px;
+      text-align: center;
+    }
+  </style>
+</head>
+
+<body>
+</html>
