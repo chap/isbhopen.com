@@ -4,4 +4,5 @@
 HOLIDAYS = [
   ['Christmas', new Date('25 Dec, 2011')],
   ['Purim', new Date('8 March, 2012')],
+  ['Passover Eve', new Date('6 April, 2012')],
 ]
