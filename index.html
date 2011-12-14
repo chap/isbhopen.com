@@ -2,70 +2,199 @@
 <head>
   <meta charset="utf-8">
   <title>Is B&H Open?</title>
-
-  <script type="text/javascript">
-    var OPEN = true;
-    var MESSAGE = '';
-    var HOLIDAY = false;
-
-    d = new Date();
-    localTime = d.getTime();
-    localOffset = d.getTimezoneOffset() * 60000;
-    utc = localTime + localOffset;
-    offset = -5;   
-    newYork = utc + (3600000*offset);
-    now = new Date(newYork);
-    year = now.getYear();
-    month = now.getMonth();
-    day = now.getDay();
-    hour = now.getHours();
-
-    HOLIDAYS = [
-      ['Christmas', new Date('25 Dec, 2011')],
-      ['Purim', new Date('8 March, 2012')],
-      ['Passover Eve', new Date('6 April, 2012')]
-    ]
-
-    for (var i = 0; i < HOLIDAYS.length; i++) {
-      h = HOLIDAYS[i][1]
-      if (h.getYear() == year && h.getMonth() == month && h.getDay() == day) {
-        HOLIDAY = true;
-        OPEN = false;
-      }
-    }
-
-    if (!(HOLIDAY)) {
-      if (day == 6) {
-        // closed saturdays
-        OPEN = false;
-      } else if (day == 5) {
-        // Friday
-        if (!(hour >= 9 && hour <= 12)){
-          OPEN = false;
-        }
-      } else if (day == 0) {
-        // Sundays
-        if (!(hour >= 10 && hour <= 17)){
-          OPEN = false;
-        }
-      } else {
-        // Monday -> Thursday
-        if (!(hour >= 9 && hour <= 18)){
-          OPEN = false;
-        }
-      }
-    }
-    
-    
-    document.writeln(OPEN ? 'Yes' : 'No')
-  </script>
+  <script type="text/javascript" src="date.js"></script>
+  <script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js"></script>
+  <script type="text/javascript" src="jquery.timeago.js"></script>
   <style type="text/css">
     body {
-      font-size: 100px;
       text-align: center;
+    }
+    h1 {
+      font-size: 100px;
     }
   </style>
 </head>
-
 <body>
+  <h1 id="header"></h1>
+  <h2 id="sub"><span class="text"></span><span id="timestamp"></span></h2>
+  <h3 id="subsub"></h3>
+  <script type="text/javascript">
+    jQuery.timeago.settings.allowFuture = true;
+    jQuery.timeago.settings.strings = {
+      prefixAgo: null,
+      prefixFromNow: null,
+      suffixAgo: "ago",
+      suffixFromNow: null,
+      seconds: "less than a minute",
+      minute: "about a minute",
+      minutes: "%d minutes",
+      hour: "about an hour",
+      hours: "about %d hours",
+      day: "a day",
+      days: "%d days",
+      month: "about a month",
+      months: "%d months",
+      year: "about a year",
+      years: "%d years",
+      numbers: []
+    };
+
+    function ISODateString(d) {
+        function pad(n){
+            return n< 10 ? '0'+n : n
+        }
+        return d.getUTCFullYear()+'-'
+        + pad(d.getUTCMonth()+1)+'-'
+        + pad(d.getUTCDate())+'T'
+        + pad(d.getUTCHours())+':'
+        + pad(d.getUTCMinutes())+':'
+        + pad(d.getUTCSeconds())+'Z'
+    }
+
+    function toEST(time) {
+      localTime = time.getTime();
+      localOffset = time.getTimezoneOffset() * 60000;
+      utc = localTime + localOffset;
+      offset = -5;   
+      newYork = utc + (3600000*offset);
+      return new Date(newYork);
+    }
+
+    function nextHour() {
+      d = new Date(year, month, date, hour)
+      d = d.add(1).hours();
+      year = d.getFullYear();
+      month = d.getMonth();
+      date = d.getDate();
+      day = d.getDay();
+      hour = d.getHours();
+    }
+
+    function openAt() {
+      // console.log("CHECKING: year=" + year + " day=" + day + " hour=" + hour)
+      open = true;
+      if (day == 6) {
+        // closed saturdays
+        open = false;
+      } else if (day == 5) {
+        // Friday  9:00AM - 1:00PM
+        if (!(hour >= 9 && hour <= 12)){
+          open = false;
+        }
+      } else if (day == 0) {
+        // Sunday Superstore   10:00AM - 6:00PM
+        if (!(hour >= 10 && hour <= 17)){
+          open = false;
+        }
+      } else {
+        // Monday thru Thursday	 9:00AM - 7:00PM
+        if (!(hour >= 9 && hour <= 19)){
+          open = false;
+        }
+      }
+      return open;
+    }
+
+    HOLIDAYS = [
+      ['Christmas', new Date('25 Dec, 2011')], // this is what a comment looks like (got to put the // before it)
+      ['Purim', new Date('8 March, 2012')],
+      ['Passover Eve', new Date('6 April, 2012')],
+      ['Passover Eve', new Date('7 April, 2012')],
+      ['Passover Eve', new Date('8 April, 2012')],
+      ['Passover Eve', new Date('9 April, 2012')],
+      ['Passover Eve', new Date('10 April, 2012')],
+      ['Passover Eve', new Date('11 April, 2012')],
+      ['Passover Eve', new Date('12 April, 2012')],
+      ['Passover Eve', new Date('13 April, 2012')],
+      ['Shavuos Eve', new Date('26 May, 2012')],
+      ['Shavuos', new Date('27 May, 2012')],
+      ['Tisha BAv Eve', new Date('28 July, 2012')],
+      ['Tisha BAv', new Date('29 July, 2012')],
+      ['Rosh Hashana', new Date('16 September, 2012')],
+      ['Rosh Hashana', new Date('17 September, 2012')],
+      ['Rosh Hashana', new Date('18 September, 2012')],
+      ['Yom Kippur Eve', new Date('25 September, 2012')],
+      ['Succos', new Date('30 September, 2012')],
+      ['Succos', new Date('31 September, 2012')],
+      ['Succos', new Date('1 October, 2012')],
+      ['Succos', new Date('2 October, 2012')],
+      ['Succos', new Date('3 October, 2012')],
+      ['Succos', new Date('4 October, 2012')],
+      ['Succos', new Date('5 October, 2012')],
+      ['Succos', new Date('6 October, 2012')],
+      ['Succos', new Date('7 October, 2012')]
+    ]
+
+    function holidayOn(year, month, day) {
+      holiday = false;
+      for (var i = 0; i < HOLIDAYS.length; i++) {
+        h = HOLIDAYS[i][1]
+        if (h.getFullYear() == year && h.getMonth() == month && h.getDay() == day) {
+          holiday = true;
+        }
+      }
+      return holiday;
+    }
+
+    function openNow() {
+      t = true;
+      if (holidayOn(year, month, day)) {
+        t = false;
+      } else if(!(openAt(year, day, hour))) {
+        t = false;
+      } else {
+        t = true;
+      }
+      return t;
+    }
+
+    function closesAt() {
+      open = true;
+      while(open) {
+        nextHour();
+        open = openNow();
+      }
+      return new Date(year, month, date, hour);
+    }
+
+    function opensAt() {
+      open = false;
+      while(!(open)) {
+        nextHour();
+        // times++;
+        // open = true;
+        // console.log("year=" + year + " month=" + month + " date=" + date + " day=" + day + " hour=" + hour)
+        // console.log("times=" + times)
+        open = openNow();
+      }
+      return new Date(year, month, date, hour);
+    }
+
+    d = new Date();
+    nowInNYC = toEST(d);
+    year = nowInNYC.getFullYear();
+    month = nowInNYC.getMonth();
+    day = nowInNYC.getDay();
+    date = nowInNYC.getDate();
+    hour = nowInNYC.getHours();
+
+    document.getElementById('header').innerHTML = (openNow() ? 'Yes' : 'No');
+
+    if (openNow()) {
+      closes = closesAt();
+      $('h2 span.text').html('closes in ');
+      $('#timestamp').attr('title', ISODateString(closes));
+      document.getElementById('subsub').innerHTML = (closes.toString("@ htt"));
+    } else {
+      opens = opensAt(year, month, day, hour);
+      $('h2 span.text').html('opens in ');
+      $('#timestamp').attr('title', ISODateString(opens));
+      document.getElementById('subsub').innerHTML = (opens.toString("dddd, MMMM dS @ htt"));
+    }
+
+    jQuery(document).ready(function() {
+      $("#timestamp").timeago();
+    });
+  </script>
+</body>
 </html>
