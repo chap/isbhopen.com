@@ -195,17 +195,34 @@
       closes = closesAt();
       $('h2 span.text').html('closes in ');
       $('#timestamp').attr('title', ISODateString(closes));
-      document.getElementById('subsub').innerHTML = (closes.toString("@ htt"));
+      document.getElementById('subsub').innerHTML = (closes.toString("(@ htt)"));
     } else {
       opens = opensAt(year, month, day, hour);
       $('h2 span.text').html('opens in ');
       $('#timestamp').attr('title', ISODateString(opens));
-      document.getElementById('subsub').innerHTML = (opens.toString("dddd, MMMM dS @ htt"));
+      if (opens.getDate() == nowInNYC.getDate()) {
+        document.getElementById('subsub').innerHTML = (opens.toString("(@ htt)"));
+      } else {
+        document.getElementById('subsub').innerHTML = (opens.toString("(dddd, MMMM dS @ htt)")); 
+      }
     }
 
     jQuery(document).ready(function() {
       $("#timestamp").timeago();
     });
+  </script>
+  <script type="text/javascript">
+
+    var _gaq = _gaq || [];
+    _gaq.push(['_setAccount', 'UA-27681227-1']);
+    _gaq.push(['_trackPageview']);
+
+    (function() {
+      var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+      ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+      var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+    })();
+
   </script>
 </body>
 </html>
