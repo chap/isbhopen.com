@@ -170,7 +170,7 @@
         nextHour();
         open = openNow();
       }
-      return new Date(year, month, date, hour);
+      return new Date(year, month, date, hour-1);
     }
 
     function opensAt() {
