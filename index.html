@@ -192,7 +192,7 @@
     document.getElementById('header').innerHTML = (openNow() ? 'Yes' : 'No');
 
     if (openNow()) {
-      closes = closesAt();
+      closes = closesAt().setTimezone('EST');
       subsub = (closes.toString("@ htt"));
       $('h2 span.text').html('closes in ');
       $('#timestamp').attr('title', ISODateString(closes.setTimezone('EST')));
