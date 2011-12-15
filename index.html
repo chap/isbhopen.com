@@ -71,6 +71,11 @@
       return new Date(newYork);
     }
 
+    function inEST() {
+      d = new Date()
+      return d.getTimezone() == 'EST'
+    }
+
     function nextHour() {
       d = new Date(year, month, date, hour)
       d = d.add(1).hours();
@@ -192,10 +197,12 @@
     document.getElementById('header').innerHTML = (openNow() ? 'Yes' : 'No');
 
     if (openNow()) {
-      closes = closesAt().setTimezone('EST');
+      closes = closesAt();
+      // if (!(inEST())) {closes = closes.setTimezone('EST')}
       subsub = (closes.toString("@ htt"));
       $('h2 span.text').html('closes in ');
-      $('#timestamp').attr('title', ISODateString(closes.setTimezone('EST')));
+      if (!(inEST())) {closes = closes.setTimezone('EST')}
+      $('#timestamp').attr('title', ISODateString(closes));
     } else {
       opens = opensAt(year, month, day, hour);
 
@@ -210,7 +217,7 @@
       $('#timestamp').attr('title', ISODateString(opens.setTimezone('EST')));
     }
 
-    if (new Date().getTimezone() != 'est') {subsub += ' EST'};
+    if (!inEST()) {subsub += ' EST'};
     subsub = '(' + subsub + ')'
     document.getElementById('subsub').innerHTML = subsub;
 
