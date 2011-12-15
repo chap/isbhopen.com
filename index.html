@@ -193,19 +193,26 @@
 
     if (openNow()) {
       closes = closesAt();
+      subsub = (closes.toString("@ htt"));
       $('h2 span.text').html('closes in ');
-      $('#timestamp').attr('title', ISODateString(closes));
-      document.getElementById('subsub').innerHTML = (closes.toString("(@ htt)"));
+      $('#timestamp').attr('title', ISODateString(closes.setTimezone('EST')));
     } else {
       opens = opensAt(year, month, day, hour);
-      $('h2 span.text').html('opens in ');
-      $('#timestamp').attr('title', ISODateString(opens));
+
+      // only show the time if it opens today
       if (opens.getDate() == nowInNYC.getDate()) {
-        document.getElementById('subsub').innerHTML = (opens.toString("(@ htt)"));
+        subsub = (opens.toString("@ htt"));
       } else {
-        document.getElementById('subsub').innerHTML = (opens.toString("(dddd, MMMM dS @ htt)")); 
+        subsub = (opens.toString("dddd, MMMM dS @ htt")); 
       }
+
+      $('h2 span.text').html('opens in ');
+      $('#timestamp').attr('title', ISODateString(opens.setTimezone('EST')));
     }
+
+    if (new Date().getTimezone() != 'est') {subsub += ' EST'};
+    subsub = '(' + subsub + ')'
+    document.getElementById('subsub').innerHTML = subsub;
 
     jQuery(document).ready(function() {
       $("#timestamp").timeago();
