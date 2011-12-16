@@ -94,17 +94,17 @@
         open = false;
       } else if (day == 5) {
         // Friday  9:00AM - 1:00PM
-        if (!(hour >= 9 && hour <= 12)){
+        if (!(hour >= 9 && hour < 13)){
           open = false;
         }
       } else if (day == 0) {
         // Sunday Superstore   10:00AM - 6:00PM
-        if (!(hour >= 10 && hour <= 17)){
+        if (!(hour >= 10 && hour < 18)){
           open = false;
         }
       } else {
         // Monday thru Thursday	 9:00AM - 7:00PM
-        if (!(hour >= 9 && hour <= 19)){
+        if (!(hour >= 9 && hour < 19)){
           open = false;
         }
       }
